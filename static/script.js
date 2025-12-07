@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 fretboard.classList.add('inst-uke');
             } else if (instrument.toLowerCase().includes('banjo')) {
                 fretboard.classList.add('inst-banjo');
+            } else if (instrument.toLowerCase().includes('violin')) {
+                fretboard.classList.add('inst-violin');
             } else {
                 fretboard.classList.add('inst-guitar');
             }

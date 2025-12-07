@@ -25,7 +25,8 @@ class MusicTheory {
         'Bass 5-String': ['Bass 5 Standard'],
         'Bass 6-String': ['Bass 6 Standard'],
         'Ukulele': ['Ukulele Standard (High G)', 'Ukulele Low G'],
-        'Banjo': ['Banjo Open G']
+        'Banjo': ['Banjo Open G'],
+        'Violin': ['Violin Standard']
     };
 
     static TUNINGS = {
@@ -46,7 +47,8 @@ class MusicTheory {
         'Bass 6 Standard': ['B', 'E', 'A', 'D', 'G', 'C'],
         'Ukulele Standard (High G)': ['G', 'C', 'E', 'A'],
         'Ukulele Low G': ['G', 'C', 'E', 'A'],
-        'Banjo Open G': ['G', 'D', 'G', 'B', 'D']
+        'Banjo Open G': ['G', 'D', 'G', 'B', 'D'],
+        'Violin Standard': ['G', 'D', 'A', 'E']
     };
 
     // ... (omitting unchanged methods for brevity if possible, keeping Context) ...

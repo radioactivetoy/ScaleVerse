@@ -35,6 +35,7 @@ Since this is a static application, you can simply:
     - **Bass**: 4, 5, 6 String
     - **Ukulele**: High G, Low G
     - **Banjo**: Open G
+    - **Violin**: Standard (G D A E)
 - **Save Image 📷**: Download the current visualization.
 
 
