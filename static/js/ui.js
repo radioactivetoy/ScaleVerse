@@ -96,6 +96,55 @@ class UI {
         this.fretboard.style.width = `${startX + (numFrets * fretWidth) + 60}px`;
         this.fretboard.style.paddingLeft = '0px'; // Reset padding
 
+        // Sync Background Grid to Fret Width (Critical for alignment)
+        // Layer 1 (Vertical Frets): Strong Fret Wire (Silver)
+        // Layer 2 (Horizontal Grid): Subtle
+        // Layer 3 (Wood Texture): Radial
+        this.fretboard.style.backgroundImage = `
+            linear-gradient(90deg, transparent ${fretWidth - 3}px, rgba(160, 160, 160, 0.6) ${fretWidth - 3}px, rgba(160, 160, 160, 0.6) ${fretWidth}px),
+            linear-gradient(rgba(0, 0, 0, 0.2) 1px, transparent 1px),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02), transparent 60%)
+        `.replace(/\n\s+/g, ' ').trim();
+
+        // 60px width for frets. 40px height for horizontal grid (matches string height approximately)
+        this.fretboard.style.backgroundSize = `${fretWidth}px 100%, 100% 20px, 100% 100%`;
+
+        // Render Fret Markers (Inlays)
+        const markers = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
+        markers.forEach(fret => {
+            const isDouble = (fret === 12 || fret === 24);
+            const markerContainer = document.createElement('div');
+            // Inline Styles for simplicity
+            markerContainer.style.position = 'absolute';
+            markerContainer.style.left = `${startX + (fret * fretWidth) - (fretWidth / 2)}px`;
+            markerContainer.style.top = '50%';
+            markerContainer.style.transform = 'translate(-50%, -50%)';
+            markerContainer.style.display = 'flex';
+            markerContainer.style.flexDirection = 'column';
+            markerContainer.style.gap = '36px'; // Space between double dots
+            markerContainer.style.pointerEvents = 'none'; // Don't block clicks
+            markerContainer.style.zIndex = '0';
+
+            const createDot = () => {
+                const dot = document.createElement('div');
+                dot.style.width = '24px';
+                dot.style.height = '24px';
+                dot.style.backgroundColor = 'rgba(230, 230, 230, 0.35)'; // Visible pearl-ish
+                dot.style.borderRadius = '50%';
+                dot.style.boxShadow = '0 1px 2px rgba(0,0,0,0.3)';
+                return dot;
+            };
+
+            if (isDouble) {
+                markerContainer.appendChild(createDot());
+                markerContainer.appendChild(createDot());
+            } else {
+                markerContainer.appendChild(createDot());
+            }
+
+            this.fretboard.appendChild(markerContainer);
+        });
+
         // Generate Strings
         instrument.strings.slice().reverse().forEach((stringObj, i) => {
             const stringDiv = document.createElement('div');
