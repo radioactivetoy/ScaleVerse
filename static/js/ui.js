@@ -496,11 +496,15 @@ class UI {
         switch (type) {
             case 'resolve': return '↙️';
             case 'tension': return '↗️';
+            case 'subdominant': return '➡️';
+            case 'neutral': return '⏺️';
+            case 'relative': return '🔗';
             case 'deceptive': return '⚡';
             case 'secondary': return '🔄';
             case 'borrowed': return '🌑';
             case 'chromatic': return '🎨';
-            default: return '->';
+            case 'modulation': return '🚀';
+            default: return '➡️';
         }
     }
 
