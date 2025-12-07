@@ -36,6 +36,7 @@ Since this is a static application, you can simply:
     - **Ukulele**: High G, Low G
     - **Banjo**: Open G
     - **Violin**: Standard (G D A E)
+    - **Piano**: 88, 61, or 49 Keys (Keyboard Visualization)
 - **Save Image 📷**: Download the current visualization.
 
 
