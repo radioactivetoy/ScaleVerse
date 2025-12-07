@@ -19,6 +19,12 @@
             <div id="settings-panel" class="settings-panel hidden">
                 <h3>Configuration</h3>
                 <div class="control-group">
+                    <label for="instrument-select">Instrument</label>
+                    <select id="instrument-select">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="control-group">
                     <label for="tuning-select">Tuning</label>
                     <select id="tuning-select">
                         <option value="Standard">Standard (E A D G B E)</option>
@@ -30,6 +36,10 @@
                         <option value="Open E">Open E (E B E G# B E)</option>
                         <option value="Eb Standard">Eb Standard (Half-Step Down)</option>
                         <option value="D Standard">D Standard (Whole-Step Down)</option>
+                        <optgroup label="Extended Range">
+                            <option value="7 String Standard">7 String (B Standard)</option>
+                            <option value="8 String Standard">8 String (F# Standard)</option>
+                        </optgroup>
                     </select>
                 </div>
             </div>

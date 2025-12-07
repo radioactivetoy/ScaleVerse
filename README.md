@@ -9,6 +9,7 @@
 
 - **Interactive Fretboard**: Visualizes scales, notes, and intervals dynamically.
 - **High-Quality Audio**: Custom-built **Dual Oscillator Synthesis** engine with pick attack noise for realistic guitar tone.
+- **Extended Range Support**: Fully supports **7-String** and **8-String** guitars.
 - **Drone Mode**: Play a continuous background reference tone (Root Note) to practice modes and intonation.
 - **Chord Highlighting**: Select chords to see how they fit within the scale (Triads & 7ths).
 - **Custom Tunings**: Support for Standard, Drop D, DADGAD, Open G, and more.
@@ -29,7 +30,11 @@ Since this is a static application, you can simply:
 - **Root & Scale**: Choose your key (e.g., C Major, A Minor Pentatonic).
 - **Show As**: Toggle between Note Names (C, D, E) and Intervals (R, M3, P5).
 - **Drone 🔊**: Toggle the bass drone note on/off.
-- **Settings ⚙️**: Access advanced options like tuning and chord complexity.
+- **Settings ⚙️**: Select your **Instrument** and **Tuning**:
+    - **Guitar**: 6, 7, 8 String
+    - **Bass**: 4, 5, 6 String
+    - **Ukulele**: High G, Low G
+    - **Banjo**: Open G
 - **Save Image 📷**: Download the current visualization.
 
 

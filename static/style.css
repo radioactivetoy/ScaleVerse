@@ -225,6 +225,7 @@ select:focus {
 }
 
 /* Specific string gauges */
+/* Defaults (Guitar) */
 .string:nth-child(1)::before {
     height: 1px;
 }
@@ -247,6 +248,51 @@ select:focus {
 
 .string:nth-child(6)::before {
     height: 4px;
+}
+
+.string:nth-child(7)::before {
+    height: 5px;
+}
+
+.string:nth-child(8)::before {
+    height: 6px;
+}
+
+/* Bass Overrides (Thick) */
+.inst-bass .string::before {
+    background-color: #888;
+}
+
+.inst-bass .string:nth-child(1)::before {
+    height: 3px;
+}
+
+.inst-bass .string:nth-child(2)::before {
+    height: 4px;
+}
+
+.inst-bass .string:nth-child(3)::before {
+    height: 5px;
+}
+
+.inst-bass .string:nth-child(4)::before {
+    height: 6px;
+}
+
+.inst-bass .string:nth-child(5)::before {
+    height: 7px;
+}
+
+.inst-bass .string:nth-child(6)::before {
+    height: 8px;
+}
+
+/* Ukulele/Banjo (Thin/Uniform) */
+.inst-uke .string::before,
+.inst-banjo .string::before {
+    height: 1.5px !important;
+    background-color: #aaa;
+    /* Nylon/Steel look */
 }
 
 .fret-line {

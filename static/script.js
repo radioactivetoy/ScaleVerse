@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const rootSelect = document.getElementById('root-select');
+    const instrumentSelect = document.getElementById('instrument-select');
     const tuningSelect = document.getElementById('tuning-select');
     const scaleSelect = document.getElementById('scale-select');
     const displayModeSelect = document.getElementById('display-mode');
@@ -20,6 +21,33 @@ document.addEventListener('DOMContentLoaded', () => {
         rootSelect.appendChild(option);
     });
 
+    // Populate Instrument Selector
+    const instruments = Object.keys(MusicTheory.INSTRUMENTS);
+    instruments.forEach(inst => {
+        const option = document.createElement('option');
+        option.value = inst;
+        option.textContent = inst;
+        instrumentSelect.appendChild(option);
+    });
+
+    function updateTunings() {
+        const instrument = instrumentSelect.value;
+        const availableTunings = MusicTheory.INSTRUMENTS[instrument];
+
+        tuningSelect.innerHTML = '';
+        availableTunings.forEach(tuning => {
+            const option = document.createElement('option');
+            option.value = tuning;
+            option.textContent = tuning;
+            tuningSelect.appendChild(option);
+        });
+
+        // Trigger update to set defaults
+        updateScale();
+    }
+
+    instrumentSelect.addEventListener('change', updateTunings);
+
     let currentScaleData = null;
     let currentTuningMidi = [40, 45, 50, 55, 59, 64]; // Default Standard
 
@@ -39,6 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             // Store for use in renderFretboard
             currentScaleData.characteristic_intervals = data.characteristic_intervals || [];
+
+            // Update Fretboard Class for CSS styling (Bass strings vs Guitar etc)
+            const instrument = instrumentSelect.value;
+            fretboard.className = ''; // Reset
+            if (instrument.toLowerCase().includes('bass')) {
+                fretboard.classList.add('inst-bass');
+            } else if (instrument.toLowerCase().includes('ukulele')) {
+                fretboard.classList.add('inst-uke');
+            } else if (instrument.toLowerCase().includes('banjo')) {
+                fretboard.classList.add('inst-banjo');
+            } else {
+                fretboard.classList.add('inst-guitar');
+            }
 
             // Populate Chords Selector
             populateChords(data.chords);
@@ -515,5 +556,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Init
-    updateScale();
+    updateTunings();
 });
