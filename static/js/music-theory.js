@@ -221,10 +221,10 @@ class MusicTheory {
             const sDegree = i + 1;
 
             if (st.includes('major') || st.includes('ionian')) {
-                const map = { 1: 'Tonic', 2: 'Subdominant', 3: 'Tonic', 4: 'Subdominant', 5: 'Dominant', 6: 'Tonic', 7: 'Dominant' };
+                const map = { 1: 'Tonic', 2: 'Supertonic', 3: 'Mediant', 4: 'Subdominant', 5: 'Dominant', 6: 'Submediant', 7: 'Leading Tone' };
                 harmonicFunction = map[sDegree];
             } else if (st.includes('minor') || st.includes('aeolian')) {
-                const map = { 1: 'Tonic', 2: 'Subdominant', 3: 'Tonic', 4: 'Subdominant', 5: 'Dominant', 6: 'Subdominant', 7: 'Dominant' };
+                const map = { 1: 'Tonic', 2: 'Supertonic', 3: 'Mediant', 4: 'Subdominant', 5: 'Dominant', 6: 'Submediant', 7: 'Subtonic' };
                 harmonicFunction = map[sDegree];
             } else {
                 const map = { 1: 'Tonic', 4: 'Subdominant', 5: 'Dominant' };
@@ -618,8 +618,110 @@ class MusicTheory {
                 });
             }
 
+        } else if (st.includes('minor') || st.includes('aeolian')) {
+            // --- Minor Key Logic (Aeolian + Harmonic + Melodic + Phrygian + Dorian) ---
+            const rootV = getDiatonicNote(5);
+            const rootIndex = MusicTheory.CHROMATIC_SCALE.indexOf(MusicTheory.normalizeNote(scaleData[0].note));
+
+            // Helper for borrowed chords
+            const getBorrowed = (semitoneOffset, quality, label) => {
+                const rootNote = MusicTheory.CHROMATIC_SCALE[(rootIndex + semitoneOffset) % 12];
+                const chord = MusicTheory.getChord(rootNote, quality);
+                return { ...chord, type: 'borrowed', label: label, function: 'Borrowed' };
+            };
+
+            // i (Tonic)
+            if (currentDegree === 1) {
+                suggestions.push(createChord(rootV, 'Dominant', 'V', 'Dominant', 'tension')); // Harmonic V
+                suggestions.push({ degree: 5, type: 'neutral', label: 'Minor v', function: 'Dominant' });
+                suggestions.push({ degree: 4, type: 'subdominant', label: 'Subdominant (iv)', function: 'Subdominant' });
+                suggestions.push({ degree: 6, type: 'subdominant', label: 'Submediant (bVI)', function: 'Sub-Mediant' });
+                suggestions.push({ degree: 7, type: 'subdominant', label: 'Subtonic (bVII)', function: 'Subtonic' });
+
+                // Kitchen Sink Additions
+                suggestions.push(getBorrowed(5, 'Major', 'Dorian IV')); // IV
+                suggestions.push(getBorrowed(2, 'Minor', 'Dorian ii')); // ii
+                suggestions.push(getBorrowed(1, 'Major', 'Neapolitan (bII)')); // bII
+                suggestions.push(getBorrowed(3, 'Augmented', 'Harmonic Mediant (bIII+)')); // bIII+
+            }
+            // ii° (Supertonic Diminished)
+            else if (currentDegree === 2) {
+                suggestions.push(createChord(rootV, 'Dominant', 'V', 'Dominant', 'tension'));
+                suggestions.push({ degree: 7, type: 'tension', label: 'To Subtonic (bVII)', function: 'Subtonic' });
+            }
+            // bIII (Mediant / Relative Major)
+            else if (currentDegree === 3) {
+                suggestions.push({ degree: 6, type: 'subdominant', label: 'Circle (bVI)', function: 'Sub-Mediant' });
+                suggestions.push({ degree: 1, type: 'relative', label: 'Relative Minor (i)', function: 'Tonic' });
+                suggestions.push({ degree: 7, type: 'tension', label: 'Dominant of Rel. (bVII)', function: 'Subtonic' });
+            }
+            // iv (Subdominant Minor)
+            else if (currentDegree === 4) {
+                suggestions.push(createChord(rootV, 'Dominant', 'V', 'Dominant', 'tension'));
+                suggestions.push({ degree: 1, type: 'resolve', label: 'Plagal (i)', function: 'Tonic' });
+                suggestions.push(getBorrowed(1, 'Major', 'Neapolitan (bII)')); // bII (Predominant)
+                suggestions.push(getBorrowed(5, 'Major', 'Dorian IV')); // IV (Bright Subdominant)
+                suggestions.push({ degree: 6, type: 'neutral', label: 'Relative (bVI)', function: 'Sub-Mediant' });
+            }
+            // v (Minor Dominant) or V (Major Dominant)
+            else if (currentDegree === 5) {
+                suggestions.push({ degree: 1, type: 'resolve', label: 'Perfect (i)', function: 'Tonic' });
+                suggestions.push({ degree: 6, type: 'deceptive', label: 'Deceptive (bVI)', function: 'Sub-Mediant' });
+                suggestions.push(getBorrowed(9, 'Diminished', 'Melodic vi°')); // #vi dim
+            }
+            // bVI (Submediant)
+            else if (currentDegree === 6) {
+                suggestions.push(getBorrowed(1, 'Major', 'Neapolitan (bII)')); // bII
+                suggestions.push(createChord(rootV, 'Dominant', 'V', 'Dominant', 'tension'));
+                suggestions.push({ degree: 4, type: 'subdominant', label: 'Step Down (iv)', function: 'Subdominant' });
+                suggestions.push({ degree: 5, type: 'tension', label: 'Step Up (V)', function: 'Dominant' });
+            }
+            // bVII (Subtonic / Major)
+            else if (currentDegree === 7) {
+                suggestions.push({ degree: 1, type: 'resolve', label: 'Aeolian Resolve (i)', function: 'Tonic' });
+                suggestions.push(createChord(rootV, 'Dominant', 'V', 'Dominant', 'tension')); // Pivot to V
+            }
+
+            // --- MINOR KEY MODULATION SUGGESTIONS ---
+            // 1. From i (Tonic): Modulate to Parallel Major
+            if (currentDegree === 1) {
+                const newRoot = activeNode.name.split(' ')[0];
+                suggestions.push({
+                    type: 'modulation',
+                    label: `Modulate to ${newRoot} Major`,
+                    newKey: { root: newRoot, type: 'Major' }
+                });
+            }
+            // 2. From bIII (Relative Major): Modulate to Relative Major Key
+            if (currentDegree === 3) {
+                const newRoot = activeNode.name.split(' ')[0];
+                suggestions.push({
+                    type: 'modulation',
+                    label: `Confirm Switch to ${newRoot} Major`,
+                    newKey: { root: newRoot, type: 'Major' }
+                });
+            }
+            // 3. From iv (Subdominant): Modulate to Subdominant Minor
+            if (currentDegree === 4) {
+                const newRoot = activeNode.name.split(' ')[0];
+                suggestions.push({
+                    type: 'modulation',
+                    label: `Modulate to ${newRoot} Minor`,
+                    newKey: { root: newRoot, type: 'Minor' }
+                });
+            }
+            // 4. From v (Dominant): Modulate to Dominant Minor
+            if (currentDegree === 5) {
+                const newRoot = activeNode.name.split(' ')[0];
+                suggestions.push({
+                    type: 'modulation',
+                    label: `Modulate to ${newRoot} Minor`,
+                    newKey: { root: newRoot, type: 'Minor' }
+                });
+            }
+
         } else {
-            // Fallback for minor/other scales for now (basic logic)
+            // Fallback for other scales
             const nextDeg = (currentDegree % 7) + 1;
             suggestions.push({ degree: 1, type: 'resolve', label: 'Return Home', function: 'Tonic' });
             suggestions.push({ degree: nextDeg, type: 'tension', label: 'Next Step', function: 'Step' });
